@@ -1,38 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <meta charset="UTF-8">
     <title>pblat-cluster by icebert</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
-
   <body>
-    <div id="container">
-      <div class="inner">
+    <section class="page-header">
+      <h1 class="project-name">pblat-cluster</h1>
+      <h2 class="project-tagline">blat with cluster parallel hybrid computing support</h2>
+      <a href="https://github.com/icebert/pblat-cluster" class="btn">View on GitHub</a>
+      <a href="https://github.com/icebert/pblat-cluster/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/icebert/pblat-cluster/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-        <header>
-          <h1>pblat-cluster</h1>
-          <h2>blat with cluster parallel hybrid computing support</h2>
-        </header>
-
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/icebert/pblat-cluster/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/icebert/pblat-cluster/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/icebert/pblat-cluster" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h3>
-<a id="welcome-to-pblat-cluster" class="anchor" href="#welcome-to-pblat-cluster" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to pblat-cluster</h3>
+    <section class="main-content">
+      <h2>
+<a id="welcome-to-pblat-cluster" class="anchor" href="#welcome-to-pblat-cluster" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to pblat-cluster</h2>
 
 <p>When the query file format is fasta, you can specify many processes in a cluster
 to process it. Processes running in the same node use shared memory. Thus pblat-cluster
@@ -44,8 +32,8 @@ huge reference like human whole genome sequence.</p>
 
 <p>pblat-cluster can run on <strong>Linux clusters</strong> with <strong>MPI</strong> support.</p>
 
-<h3>
-<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h3>
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
 
 <p>To compile the source code, simply enter the source code directory in terminal
 and issue the "make" command. When the compiling finished, the executable
@@ -55,81 +43,70 @@ you want.</p>
 <pre><code>$ make
 </code></pre>
 
-<h3>
-<a id="run" class="anchor" href="#run" aria-hidden="true"><span class="octicon octicon-link"></span></a>Run</h3>
+<h2>
+<a id="run" class="anchor" href="#run" aria-hidden="true"><span class="octicon octicon-link"></span></a>Run</h2>
 
 <p>Two ways to run pblat-cluster in a cluster:</p>
 
-<h2>
-<a id="without-pbs" class="anchor" href="#without-pbs" aria-hidden="true"><span class="octicon octicon-link"></span></a>without PBS</h2>
+<h3>
+<a id="without-pbs" class="anchor" href="#without-pbs" aria-hidden="true"><span class="octicon octicon-link"></span></a>without PBS</h3>
 
 <pre><code>$ mpirun -n &lt;N&gt; pblat-cluster database query output.psl
 </code></pre>
 
-<h2>
-<a id="with-pbs" class="anchor" href="#with-pbs" aria-hidden="true"><span class="octicon octicon-link"></span></a>with PBS</h2>
+<h3>
+<a id="with-pbs" class="anchor" href="#with-pbs" aria-hidden="true"><span class="octicon octicon-link"></span></a>with PBS</h3>
 
 <p>You can write a bash script and submit to PBS using qsub/sbatch.</p>
 
 <ul>
-<li>
-<p>qsub script example</p>
-
-<h1>
-<a id="binbash" class="anchor" href="#binbash" aria-hidden="true"><span class="octicon octicon-link"></span></a>!/bin/bash</h1>
-
-<h1>
-<a id="pbs--n-pblat" class="anchor" href="#pbs--n-pblat" aria-hidden="true"><span class="octicon octicon-link"></span></a>PBS -N pblat</h1>
-
-<h1>
-<a id="pbs--l-nodes32ppn4" class="anchor" href="#pbs--l-nodes32ppn4" aria-hidden="true"><span class="octicon octicon-link"></span></a>PBS -l nodes=32:ppn=4</h1>
-
-<p>cd workingdir</p>
-
-<p>mpirun pblat-cluster genome.fa reads.fa out.psl</p>
-</li>
-<li>
-<p>sbatch script example</p>
-
-<h1>
-<a id="binbash-1" class="anchor" href="#binbash-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>!/bin/bash</h1>
-
-<h1>
-<a id="sbatch--j-pblat" class="anchor" href="#sbatch--j-pblat" aria-hidden="true"><span class="octicon octicon-link"></span></a>SBATCH -J pblat</h1>
-
-<h1>
-<a id="sbatch--n-32" class="anchor" href="#sbatch--n-32" aria-hidden="true"><span class="octicon octicon-link"></span></a>SBATCH -N 32</h1>
-
-<h1>
-<a id="sbatch--n-4" class="anchor" href="#sbatch--n-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>SBATCH -n 4</h1>
-
-<p>cd workingdir</p>
-
-<p>mpirun pblat-cluster genome.fa reads.fa out.psl</p>
-</li>
+<li>qsub script example</li>
 </ul>
 
-<h3>
-<a id="licence" class="anchor" href="#licence" aria-hidden="true"><span class="octicon octicon-link"></span></a>Licence</h3>
+<div class="highlight highlight-batch"><pre>#!/bin/bash
+#PBS -N pblat
+#PBS -l nodes=32:ppn=4
+
+<span class="pl-k">cd</span> workingdir
+
+mpirun pblat-cluster genome.fa reads.fa out.psl</pre></div>
+
+<ul>
+<li>sbatch script example</li>
+</ul>
+
+<div class="highlight highlight-batch"><pre>#!/bin/bash
+#SBATCH -J pblat
+#SBATCH -N 32
+#SBATCH -n 4
+
+<span class="pl-k">cd</span> workingdir
+
+mpirun pblat-cluster genome.fa reads.fa out.psl</pre></div>
+
+<h2>
+<a id="licence" class="anchor" href="#licence" aria-hidden="true"><span class="octicon octicon-link"></span></a>Licence</h2>
 
 <p>pblat is modified from blat, the licence is the same as blat. The source code and
 executables are freely available for academic, nonprofit and personal use. Commercial
 licensing information is available on the <a href="http://www.kentinformatics.com/">Kent Informatics website</a>.</p>
 
-<h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<h2>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h2>
 
 <p>Copyright (C) 2012 - 2015 Wang Meng</p>
 
 <p>Contact me: <a href="mailto:wangm@mail.cbi.pku.edu.cn">wangm@mail.cbi.pku.edu.cn</a> </p>
-        </section>
 
-        <footer>
-          pblat-cluster is maintained by <a href="https://github.com/icebert">icebert</a><br>
-          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/icebert/pblat-cluster">pblat-cluster</a> is maintained by <a href="https://github.com/icebert">icebert</a>.</span>
 
-                  <script type="text/javascript">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+            <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -140,7 +117,6 @@ licensing information is available on the <a href="http://www.kentinformatics.co
             } catch(err) {}
           </script>
 
-      </div>
-    </div>
   </body>
 </html>
+
