@@ -1,7 +1,7 @@
 /* blat - Standalone BLAT fast sequence search command line tool. */
 /* Copyright 2001-2004 Jim Kent.  All rights reserved. */
 
-/* Modified by Meng Wang. 2012-2014 */
+/* Modified by Meng Wang. 2012-2015 */
 
 #include "common.h"
 #include "memalloc.h"
@@ -36,6 +36,9 @@ unsigned long databaseLetters = 0;	/* Number of bases in database. */
 enum constants {
     qWarnSize = 5000000, /* Warn if more than this many bases in one query. */
 };
+
+/* Rank id of MPI */
+int myid;
 
 /* Variables that can be set from command line. */
 int threads = 1;
@@ -348,7 +351,7 @@ void* performSearch(void* args)
     DNA *faFastBuf;
 
 
-    if (id==0)
+    if (myid==0 && id==0)
         gfOutputHead(gvo, outFile);
 //for (i=0; i<queryCount; ++i)
     {
@@ -812,7 +815,7 @@ int main(int argc, char *argv[])
     unsigned faFastBufSize = 0;
     DNA      *faFastBuf;
     
-    int  id, chooseid, numproc;
+    int  chooseid, numproc;
     int  namelen, provided;
     char nodename[MPI_MAX_PROCESSOR_NAME];
     char namebuf[1024*64];
@@ -830,11 +833,11 @@ int main(int argc, char *argv[])
     MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided);
     if (provided < MPI_THREAD_FUNNELED)
         MPI_Abort(MPI_COMM_WORLD, 1);
-    MPI_Comm_rank(MPI_COMM_WORLD, &id);
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
     MPI_Comm_size(MPI_COMM_WORLD, &numproc);
     MPI_Get_processor_name(nodename, &namelen);
     
-    if (id != 0)
+    if (myid != 0)
     {
         /* For non master process, send its node name
          * to master process */
@@ -842,7 +845,7 @@ int main(int argc, char *argv[])
         
         MPI_Recv(&chooseid, 1, MPI_INT, 0, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         
-        if (chooseid == id)
+        if (chooseid == myid)
         {
             MPI_Recv(&threads, 1, MPI_INT, 0, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             MPI_Recv(&base,    1, MPI_INT, 0, 3, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -1063,7 +1066,7 @@ int main(int argc, char *argv[])
     
     gfClientFileArray(argv[2], &queryFiles, &queryCount);
     lf=(struct lineFile **)malloc(sizeof(struct lineFile *) * threads);
-    if (id == 0)
+    if (myid == 0)
     {
         /* get number of lines that each process/thread should process */      
         queryCount=0;
@@ -1164,14 +1167,14 @@ int main(int argc, char *argv[])
     
     for (i=0; i<threads; i++)
     {
-        if (id==0 && i==0) continue;
+        if (myid==0 && i==0) continue;
         sprintf(buf, "%s.tmp.%d", argv[3], base+i);
         sprintf(namebuf, "%s.%d", argv[3], base+i);
         rename(buf, namebuf);
     }
     
     
-    if (id == 0 && numproc > 1)
+    if (myid == 0 && numproc > 1)
     {
         fres = mustOpen(argv[3], "ab");
         for (i=1; i<numproc; i++)
