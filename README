@@ -20,6 +20,11 @@ and issue the "make" command. When the compiling finished, the executable
 pblat-cluster will locate in the same directory. Then it can be moved to where
 you want.
 
+By default the makefile will use mpicc to compile the codes. You can specify
+other MPI compilers installed in your cluster. For example, using Intel MPI
+compiler by typing "make CC=mpiicc" .
+
+
 
 ################
      Run
