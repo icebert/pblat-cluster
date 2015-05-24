@@ -815,7 +815,7 @@ int main(int argc, char *argv[])
     int  id, chooseid, numproc;
     int  namelen, provided;
     char nodename[MPI_MAX_PROCESSOR_NAME];
-    char namebuf[MPI_MAX_PROCESSOR_NAME];
+    char namebuf[1024*64];
     struct headnode *nodelist;
     struct headnode *pn;
     struct headnode *pnt;
@@ -1111,6 +1111,22 @@ int main(int argc, char *argv[])
             tmp += cnt;
         }
         
+        /* free applied memory */
+        pn=nodelist;
+        while(pn != NULL)
+        {
+            pr = pn->rlist;
+            while(pr != NULL)
+            {
+                prt = pr->next;
+                free(pr);
+                pr = prt;
+            }
+            pnt = pn->next;
+            free(pn);
+            pn = pnt;
+        }
+        
         free(offsets);
     }
     else
@@ -1128,32 +1144,12 @@ int main(int argc, char *argv[])
         
         free(offsets);
     }
+    MPI_Finalize();
     
 
 
     /* Call routine that does the work. */
     blat(argv[1], queryCount, queryFiles, lf, out);
-    
-    
-    /* For debug */
-    /*
-    for (i=0; i<threads; i++)
-    {
-        struct dnaSeq seq;
-        seq.name=(char*)malloc(sizeof(char)*512);
-        cnt=queryCount;
-        while (cnt-- && faMixedSpeedReadNext(lf[i], &seq.dna, &seq.size, &seq.name, &faFastBuf, &faFastBufSize))
-        {
-            fputs(">", out[i]);
-            fputs(seq.name, out[i]);
-            fputs("\n", out[i]);
-            fputs(seq.dna, out[i]);
-            fputs("\n", out[i]);
-        }
-        free(seq.name);
-        faFreeFastBuf(&faFastBuf, &faFastBufSize);
-    }
-    */
     
     
 
@@ -1165,66 +1161,43 @@ int main(int argc, char *argv[])
     free(lf);
     free(out);
     
-    /* Tell master process that I have finished */
-    if (id != 0)
+    
+    for (i=0; i<threads; i++)
     {
-        MPI_Send(&id, 1, MPI_INT, 0, 6, MPI_COMM_WORLD);
+        if (id==0 && i==0) continue;
+        sprintf(buf, "%s.tmp.%d", argv[3], base+i);
+        sprintf(namebuf, "%s.%d", argv[3], base+i);
+        rename(buf, namebuf);
     }
     
     
-
     if (id == 0 && numproc > 1)
     {
-        /* Wait until all processes finish */
-        for (pn=nodelist->next; pn!=NULL; pn=pn->next)
-        {
-            chooseid = pn->rlist->rank;
-            MPI_Recv(&tmp, 1, MPI_INT, chooseid, 6, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        }
-        
-        
         fres = mustOpen(argv[3], "ab");
         for (i=1; i<numproc; i++)
         {
-            sprintf(buf, "%s.tmp.%d", argv[3], i);
-            ftmp = mustOpen(buf, "rb");
+            sprintf(buf, "%s.%d", argv[3], i);
+            
+            while((ftmp = fopen(buf, "rb")) == NULL)
+                sleep(10);
+            
             while((cnt=fread(buf, 1, 1024*64, ftmp))>0)
             {
                 tmp=fwrite(buf, 1, cnt, fres);
                 if (tmp!=cnt)
                 {
                     printf("Merge files failed\n");
-                    MPI_Finalize();
                     return 1;
                 }
             }
-            carefulClose(&ftmp);
-            sprintf(buf, "%s.tmp.%d", argv[3], i);
+            fclose(ftmp);
+            sprintf(buf, "%s.%d", argv[3], i);
             remove(buf);
         }
         carefulClose(&fres);
-    }
-    
-    if (id == 0)
-    {
-        /* free applied memory */
-        pn=nodelist;
-        while(pn != NULL)
-        {
-            pr = pn->rlist;
-            while(pr != NULL)
-            {
-                prt = pr->next;
-                free(pr);
-                pr = prt;
-            }
-            pnt = pn->next;
-            free(pn);
-            pn = pnt;
-        }
+
     }
     
     
-    MPI_Finalize();
     return 0;
 }
