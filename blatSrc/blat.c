@@ -1052,6 +1052,13 @@ int main(int argc, char *argv[])
     setFfExtendThroughN(optionExists("extendThroughN"));  
     
 
+    gfClientFileArray(argv[2], &queryFiles, &queryCount);
+    if (queryCount > 1)
+    {
+        MPI_Finalize();
+        errAbort("pblat does not support using list of file names as query. Please query each of the input files separately".);
+    }
+
 
     out=(FILE**)malloc(sizeof(FILE*) * threads);
     for (i=0; i<threads; i++)
@@ -1064,7 +1071,6 @@ int main(int argc, char *argv[])
     }
 
     
-    gfClientFileArray(argv[2], &queryFiles, &queryCount);
     lf=(struct lineFile **)malloc(sizeof(struct lineFile *) * threads);
     if (myid == 0)
     {
