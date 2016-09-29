@@ -1056,7 +1056,7 @@ int main(int argc, char *argv[])
     if (queryCount > 1)
     {
         MPI_Finalize();
-        errAbort("pblat does not support using list of file names as query. Please query each of the input files separately".);
+        errAbort("pblat does not support using list of file names as query. Please query each of the input files separately.");
     }
 
 
