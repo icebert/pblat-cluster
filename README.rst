@@ -36,7 +36,9 @@ Run
 Two ways to run pblat-cluster in a cluster:
 
 1) **without PBS**
+
 ::
+
   mpirun -n <N> pblat-cluster database query output.psl
 
 2) **with PBS**
