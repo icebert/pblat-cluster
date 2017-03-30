@@ -35,15 +35,17 @@ Run
 ------------
 Two ways to run pblat-cluster in a cluster:
 
-1) without PBS
+1) **without PBS**
 ::
   mpirun -n <N> pblat-cluster database query output.psl
 
-2) with PBS
+2) **with PBS**
+
 You can write a bash script and submit to PBS using qsub/sbatch.
 
 * **qsub script example**
 ::
+
   #!/bin/bash
   #PBS -N pblat
   #PBS -l nodes=32:ppn=4
@@ -52,9 +54,9 @@ You can write a bash script and submit to PBS using qsub/sbatch.
   
   mpirun pblat-cluster genome.fa reads.fa out.psl
 
-
 * **sbatch script example**
 ::
+
   #!/bin/bash
   #SBATCH -J pblat
   #SBATCH -N 32
@@ -72,7 +74,7 @@ pblat is modified from blat, the licence is the same as blat. The source code an
 executables are freely available for academic, nonprofit and personal use. Commercial
 licensing information is available on the Kent Informatics website.
 
-
+----
 
 Copyright (C) 2012 - 2017 Wang Meng
 
