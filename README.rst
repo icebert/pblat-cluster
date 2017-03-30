@@ -1,5 +1,11 @@
+===================================================
 pblat-cluster - parallelized blat (cluster version)
+===================================================
 blat with cluster parallel hybrid computing support
+---------------------------------------------------
+
+.. image:: https://travis-ci.org/icebert/pblat-cluster.svg?branch=master
+    :target: https://travis-ci.org/icebert/pblat-cluster
 
 When the query file format is fasta, you can specify many processes in a cluster
 to process it. Processes running in the same node use shared memory. Thus pblat-cluster
@@ -11,10 +17,10 @@ The program is based on the original blat program which was written by Jim Kent.
 
 pblat-cluster can run on Linux clusters with MPI support.
 
+----
 
-################
-    Install
-################
+Install
+------------
 To compile the source code, simply enter the source code directory in terminal
 and issue the "make" command. When the compiling finished, the executable
 pblat-cluster will locate in the same directory. Then it can be moved to where
@@ -25,52 +31,49 @@ other MPI compilers installed in your cluster. For example, using Intel MPI
 compiler by typing "make CC=mpiicc" .
 
 
-
-################
-     Run
-################
+Run
+------------
 Two ways to run pblat-cluster in a cluster:
 
 1) without PBS
-mpirun -n <N> pblat-cluster database query output.psl
+::
+  mpirun -n <N> pblat-cluster database query output.psl
 
 2) with PBS
 You can write a bash script and submit to PBS using qsub/sbatch.
 
-*** qsub script example ***
-=================================================================
-#!/bin/bash
-#PBS -N pblat
-#PBS -l nodes=32:ppn=4
-
-cd workingdir
-
-mpirun pblat-cluster genome.fa reads.fa out.psl
-=================================================================
-
-
-*** sbatch script example ***
-=================================================================
-#!/bin/bash
-#SBATCH -J pblat
-#SBATCH -N 32
-#SBATCH -n 4
-
-cd workingdir
-
-mpirun pblat-cluster genome.fa reads.fa out.psl
-=================================================================
+* **qsub script example**
+::
+  #!/bin/bash
+  #PBS -N pblat
+  #PBS -l nodes=32:ppn=4
+  
+  cd workingdir
+  
+  mpirun pblat-cluster genome.fa reads.fa out.psl
 
 
-################
-   Licence
-################
+* **sbatch script example**
+::
+  #!/bin/bash
+  #SBATCH -J pblat
+  #SBATCH -N 32
+  #SBATCH -n 4
+  
+  cd workingdir
+  
+  mpirun pblat-cluster genome.fa reads.fa out.psl
+
+----
+
+Licence
+------------
 pblat is modified from blat, the licence is the same as blat. The source code and
 executables are freely available for academic, nonprofit and personal use. Commercial
 licensing information is available on the Kent Informatics website.
 
 
 
-Copyright (C) 2012 - 2015 Wang Meng
+Copyright (C) 2012 - 2017 Wang Meng
 
 Contact me: wangm@mail.cbi.pku.edu.cn 
