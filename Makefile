@@ -1,7 +1,7 @@
 MACHTYPE=x86_64
 
 CC=mpicc
-CFLAGS=
+CFLAGS=-O -Wall
 HG_INC=-I./inc
 HG_DEFS=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_GNU_SOURCE -DMACHTYPE_$(MACHTYPE)
 
@@ -38,7 +38,7 @@ O2 = bandExt.o crudeali.o ffAliHelp.o ffSeedExtend.o fuzzyFind.o \
     patSpace.o supStitch.o trans3.o
 
 all: blat.o jkOwnLib.a jkweb.a
-	$(CC) -O  -o pblat-cluster blat.o jkOwnLib.a jkweb.a  -lm -lpthread
+	$(CC) $(CFLAGS) -o pblat-cluster blat.o jkOwnLib.a jkweb.a  -lm -lpthread
 	rm -f *.o *.a
 
 jkweb.a: $(O1)
@@ -48,15 +48,15 @@ jkOwnLib.a: $(O2)
 	ar rcus jkOwnLib.a $(O2)
 
 blat.o: blatSrc/blat.c
-	$(CC) $(CFLAGS) $(HG_DEFS) $(HG_INC) -O2 -Wall -c -o blat.o blatSrc/blat.c
+	$(CC) $(CFLAGS) $(HG_DEFS) $(HG_INC) -c -o blat.o blatSrc/blat.c
 
 $(O1): %.o: lib/%.c
-	$(CC) $(CFLAGS) $(HG_DEFS) $(HG_INC) -O2 -Wall -c -o $@ $<
+	$(CC) $(CFLAGS) $(HG_DEFS) $(HG_INC) -c -o $@ $<
 
 $(O2): %.o: jkOwnLib/%.c
-	$(CC) $(CFLAGS) $(HG_DEFS) $(HG_INC) -O2 -Wall -c -o $@ $<
+	$(CC) $(CFLAGS) $(HG_DEFS) $(HG_INC) -c -o $@ $<
 
 
 clean:
-	rm -f *.o *.a pblat
+	rm -f *.o *.a pblat-cluster
 
