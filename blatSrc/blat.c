@@ -160,7 +160,7 @@ void usage()
         "   -extendThroughN   Allows extension of alignment through large blocks of Ns.\n"
         , gfVersion, MAXSINGLEPIECESIZE, ffIntronMaxDefault
     );
-    exit(-1);
+    exit(0);
 }
 
 
