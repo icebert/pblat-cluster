@@ -84,6 +84,6 @@ to genomes**. *BMC Bioinformatics* 2019, 20(1). `[full text]
 
 ----
 
-Copyright (C) 2012 - 2019 Wang Meng
+Copyright (C) 2012 - 2020 Wang Meng
 
 Contact me: wangm@mail.cbi.pku.edu.cn 
