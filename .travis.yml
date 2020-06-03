@@ -1,9 +1,0 @@
-dist: bionic
-language: c
-script:
-  - make
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y mpich zlib1g-dev libssl-dev
-  - test -n $CC && unset CC
-

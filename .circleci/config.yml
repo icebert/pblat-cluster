@@ -1,0 +1,12 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: cimg/base
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y mpich zlib1g-dev libssl-dev
+      - run: make
+      - run: ./pblat-cluster
+
