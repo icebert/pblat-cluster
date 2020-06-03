@@ -2,11 +2,11 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cimg/base:2020.01
+      - image: ubuntu
     steps:
       - checkout
       - run: apt-get update
-      - run: apt-get install -y mpich zlib1g-dev libssl-dev
+      - run: apt-get install -y mpich zlib1g-dev libssl-dev build-essential
       - run: make
       - run: ./pblat-cluster
 
