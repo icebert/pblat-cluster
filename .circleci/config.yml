@@ -2,11 +2,11 @@ version: 2
 jobs:
   build:
     docker:
-      - image: gcc:8.2
+      - image: cimg/base:2020.01
     steps:
       - checkout
       - run: apt-get update
-      - run: apt-get install -f -y mpich zlib1g-dev libssl-dev
+      - run: apt-get install -y mpich zlib1g-dev libssl-dev
       - run: make
       - run: ./pblat-cluster
 
