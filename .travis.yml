@@ -4,4 +4,4 @@ script:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq mpich zlib1g-dev libssl-dev
-  - export CC=mpicc
+  - export CC=/usr/bin/mpicc
