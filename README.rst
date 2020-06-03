@@ -4,8 +4,8 @@ pblat-cluster - parallelized blat (cluster version)
 blat with cluster parallel hybrid computing support
 ---------------------------------------------------
 
-.. image:: https://travis-ci.org/icebert/pblat-cluster.svg?branch=master
-    :target: https://travis-ci.org/icebert/pblat-cluster
+.. image:: https://circleci.com/gh/icebert/pblat-cluster.svg?style=shield
+    :target: https://circleci.com/gh/icebert/pblat-cluster
 
 When the query file format is fasta, you can specify many processes in a cluster
 to process it. Processes running in the same node use shared memory. Thus pblat-cluster
