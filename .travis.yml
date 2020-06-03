@@ -1,5 +1,5 @@
+dist: bionic
 language: c
-compiler: mpicc
 script:
   - make
 before_install:
