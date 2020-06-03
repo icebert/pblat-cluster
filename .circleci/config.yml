@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cimg/base
+      - image: gcc:8.2
     steps:
       - checkout
       - run: sudo apt-get update
