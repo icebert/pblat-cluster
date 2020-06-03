@@ -1,7 +1,7 @@
 language: c
 script:
-  - make
+  - make CC=/usr/bin/mpicc
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq mpich zlib1g-dev libssl-dev
-  - export CC=/usr/bin/mpicc
+
