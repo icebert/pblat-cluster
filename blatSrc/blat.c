@@ -586,13 +586,14 @@ void bigBlat(struct dnaSeq *untransList, int queryCount, char *queryFiles[], str
     boolean         toggle = FALSE;
     boolean         maskUpper = FALSE;
 
-    pthread_t*      thd=(pthread_t*)malloc(sizeof(pthread_t)*threads);
-    void***         args=(void***)malloc(sizeof(void*)*threads);
-    int*            id=(int*)malloc(sizeof(int)*threads);
+    pthread_t*      thd = (pthread_t*)malloc(sizeof(pthread_t)*threads);
+    void***         args = (void***)malloc(sizeof(void*)*threads);
+    int*            id = (int*)malloc(sizeof(int)*threads);
+    off_t*          offset = (off_t*)malloc(sizeof(off_t)*threads);
 
 
     if (showStatus)
-        printf("Blatx %d sequences in database, %d files in query\n", slCount(untransList), queryCount);
+        printf("Blatx %d sequences in database, %d sequences in each query\n", slCount(untransList), queryCount);
 
     /* Figure out how to manage query case.  Proteins want to be in
      * upper case, generally, nucleotides in lower case.  But there
@@ -614,6 +615,9 @@ void bigBlat(struct dnaSeq *untransList, int queryCount, char *queryFiles[], str
 
     if (gvo[0]->fileHead != NULL)
         gvo[0]->fileHead(gvo[0], out[0]);
+
+    for (i=0; i<threads; i++)
+        offset[i] = lineFileTell(lf[i]);
 
     for (isRc = FALSE; isRc <= 1; ++isRc)
     {
@@ -662,11 +666,8 @@ void bigBlat(struct dnaSeq *untransList, int queryCount, char *queryFiles[], str
 
         for (i=0; i<threads; i++)
             pthread_join(thd[i], NULL);
-        free(thd);
         for (i=0; i<threads; i++)
             free(args[i]);
-        free(args);
-        free(id);
 
 
         /* Clean up time. */
@@ -681,7 +682,19 @@ void bigBlat(struct dnaSeq *untransList, int queryCount, char *queryFiles[], str
         {
             reverseComplement(seq->dna, seq->size);
         }
+
+        /* Rewind each input file pointer for RC run */
+        if (isRc == FALSE)
+        {
+            for (i=0; i<threads; i++)
+                lineFileSeek(lf[i], offset[i], SEEK_SET);
+        }
     }
+
+    free(thd);
+    free(args);
+    free(id);
+    free(offset);
 }
 
 
@@ -1079,7 +1092,8 @@ int main(int argc, char *argv[])
         struct lineFile *tlf = lineFileOpen(queryFiles[0], TRUE);
         while (faMixedSpeedReadNext(tlf, NULL, NULL, NULL, &faFastBuf, &faFastBufSize))
             queryCount++;
-        queryCount=queryCount/numproc+1;
+        if (numproc > 1)
+            queryCount=queryCount/numproc+1;
         
         
         /* get the offset of each file handler for each process/thread */
